@@ -32,16 +32,7 @@ class ClockPicker extends Widget
     public function init()
     {
         parent::init();
-        if (empty($this->type) && $this->type !== self::CHECKBOX && $this->type !== self::RADIO) {
-            throw new InvalidConfigException("You must define a valid 'type' which must be either 1 (for checkbox) or 2 (for radio).");
-        }
-        if ($this->type == self::RADIO) {
-            if (empty($this->items) || !is_array($this->items)) {
-                throw new InvalidConfigException("You must setup the 'items' array for the 'radio' type.");
-            }
-        }
         $this->registerAssets();
-        echo $this->renderInput();
     }
 
     /**
@@ -50,34 +41,8 @@ class ClockPicker extends Widget
      * in case JQuery is not supported by the browser
      * @return string
      */
-    protected function renderInput()
+    protected function run()
     {
-        if ($this->type == self::CHECKBOX) {
-            if (empty($this->options['label'])) {
-                $this->options['label'] = null;
-            }
-            $input = $this->getInput('checkbox');
-            $output = ($this->inlineLabel) ? $input : Html::tag('div', $input);
-            $output = $this->mergeIndToggle($output);
-            return Html::tag('div', $output, $this->containerOptions) . "\n";
-        }
-        $output = '';
-        Html::addCssClass($this->containerOptions, 'kv-switch-container');
-        foreach ($this->items as $item) {
-            if (!is_array($item)) {
-                continue;
-            }
-            $label = ArrayHelper::getValue($item, 'label', false);
-            $options = ArrayHelper::merge($this->itemOptions, ArrayHelper::getValue($item, 'options', []));
-            $labelOptions = ArrayHelper::merge($this->labelOptions, ArrayHelper::getValue($item, 'labelOptions', []));
-            $value = ArrayHelper::getValue($item, 'value', null);
-            $options['value'] = $value;
-            $input = Html::radio($this->name, ($value == $this->value), $options);
-
-            $output .= Html::label($label, $this->name, $labelOptions) . "\n" .
-                (($this->inlineLabel) ? $input : Html::tag('div', $input)) . "\n" .
-                $this->separator;
-        }
         return Html::tag('div', $output, $this->containerOptions) . "\n";
     }
 
@@ -87,23 +52,12 @@ class ClockPicker extends Widget
     public function registerAssets()
     {
         $view = $this->getView();
-        SwitchInputAsset::register($view);
-        if (empty($this->pluginOptions['animate'])) {
-            $this->pluginOptions['animate'] = true;
-        }
-        $this->pluginOptions['indeterminate'] = (
-            $this->tristate &&
-            $this->value === $this->indeterminateValue &&
-            $this->type !== self::RADIO
-        );
+        ClockPickerAsset::register($view);
+
         $this->pluginOptions['disabled'] = $this->disabled;
         $this->pluginOptions['readonly'] = $this->readonly;
         $id = $this->type == self::RADIO ? 'jQuery("[name = \'' . $this->name . '\']")' : 'jQuery("#' . $this->options['id'] . '")';
-        $this->registerPlugin($this->pluginName, $id);
-        if (!$this->tristate || $this->indeterminateToggle === false || $this->type == self::RADIO) {
-            return;
-        }
-        $tog = 'jQuery("[data-kv-switch=\'' . $this->options['id'] . '\']")';
+
         $js = "{$tog}.on('click',function(){
     var \$el={$id}, val;
     \$el.bootstrapSwitch('toggleIndeterminate');

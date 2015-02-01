@@ -17,8 +17,13 @@ class ClockPickerAsset extends yii\web\AssetBundle
     public function init()
     {
         $this->setSourcePath(__DIR__ . '/assets');
-        $this->setupAssets('css', ['css/bootstrap-switch', 'css/bootstrap-switch-kv']);
-        $this->setupAssets('js', ['js/bootstrap-switch']);
+        if (YII_DEBUG) {
+            $this->setupAssets('css', ['bootstrap-clockpicker.min.css']);
+            $this->setupAssets('js', ['bootstrap-clockpicker.min.js']);
+        } else {
+            $this->setupAssets('css', ['bootstrap-clockpicker.css']);
+            $this->setupAssets('js', ['bootstrap-clockpicker.js']);
+        }
         parent::init();
     }
 }
