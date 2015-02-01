@@ -13,7 +13,7 @@ or add
 to the require section of your composer.json file.
 
 ##Usage
-```
+```php
 use slatius\clockpicker\ClockPicker;
 
 // Usage with ActiveForm and model
