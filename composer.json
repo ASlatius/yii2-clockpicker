@@ -1,0 +1,21 @@
+{
+    "name": "slatius/yii2-clockpicker",
+    "description": "",
+    "keywords": ["yii2", "bootstrap", "clockpicker"],
+    "type": "yii2-extension",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/Hommer101/yii2-clockpicker/issues",
+        "source": "https://github.com/Hommer101/yii2-clockpicker"
+    },
+    "authors": [
+        {
+            "name": "Arno Slatius",
+            "email": "a.slatius@gmail.com"
+        }
+    ],
+    "require": {
+        "bower-asset/bootstrap": "3.2.* | 3.1.*",
+        "bower-asset/clockpicker": "*"
+    }
+}
